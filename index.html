@@ -171,6 +171,41 @@
 
 
 
+<script>
+    if (typeof console !== 'undefined' && typeof console.debug !== 'function') {
+      console.debug = console.log.bind(console);
+    }
+    var __logger = (typeof console !== 'undefined') ? console : null;
+    if (typeof window !== 'undefined') {
+      if (typeof window.__getWebDB !== 'function') {
+        window.__getWebDB = function(name) {
+          try {
+            return window.localStorage ? window.localStorage.getItem(name) : null;
+          } catch (err) {
+            if (__logger && __logger.warn) {
+              __logger.warn('Unable to access localStorage for __getWebDB:', err);
+            }
+            return null;
+          }
+        };
+      }
+      if (typeof window.__setWebDB !== 'function') {
+        window.__setWebDB = function(name, value) {
+          try {
+            if (window.localStorage) {
+              window.localStorage.setItem(name, value);
+              return true;
+            }
+          } catch (err) {
+            if (__logger && __logger.warn) {
+              __logger.warn('Unable to access localStorage for __setWebDB:', err);
+            }
+          }
+          return false;
+        };
+      }
+    }
+  </script>
 
 
 
